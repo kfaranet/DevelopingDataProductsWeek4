@@ -1,0 +1,44 @@
+---
+title: "Temperature Conversion"
+author: "KF"
+date: "9/7/2020"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(dplyr)
+library(ggplot2)
+library(plotly)
+```
+
+## Executive Summary
+
+This application is designed to make it easy for users to convert Farenheit to Celsius or vice versa. It has a very simple user interface and does not require any previous knowledge of the conversion formula.
+
+## Conversion Formulas
+
+- Farenheit to Celsius
+```{r FC, eval=FALSE, echo=TRUE, warning=FALSE, message=FALSE}
+output$CText <- renderText(round((input$Ftemp - 32) * (5/9),1))
+```
+- Celsius to Farenheit
+```{r CF, eval=FALSE, echo=TRUE, warning=FALSE, message=FALSE}
+output$FText <- renderText(round((input$Ctemp * (9/5) + 32),1))
+```
+
+## Conversion Examples
+```{r dataSlide, echo = FALSE, warning=FALSE, message=FALSE}
+temperatures <- data.frame(Farenheit=-50:100)
+temperatures2 <- temperatures %>% mutate(Celsius = round((Farenheit-32)*(5/9)),1)
+slideData <- filter(temperatures2, Farenheit %in% c(-50, -25,0,25,50,75,100))
+print(slideData[c(1,2)],row.names = FALSE)
+```
+
+## Conversion Plot
+
+```{r plotSlide, echo = FALSE, warning=FALSE, message=FALSE}
+p <- ggplot(data=temperatures2, aes(x=Farenheit, y=Celsius))+geom_line(color="blue")+labs(x="Farenheit", y="Celsius", title="Temperature Conversion")
+ggplotly(p)
+```
+
